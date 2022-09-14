@@ -78,6 +78,7 @@ def login_user():
             login_user = User.query.filter_by(email=email).first()
             is_valid = check_password(login_user.password, password, login_user.salt)
             token = create_access_token(identity=login_user.id)
+            print(token)
             return jsonify(login_user.serialize())
     return jsonify({"message":"bad credentials"})
 
