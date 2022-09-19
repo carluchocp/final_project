@@ -1,7 +1,7 @@
 const getState = ({ getStore, getActions, setStore }) => {
 	return {
 		store: {
-			urlBase: "http://127.0.0.1:3001/api",
+			urlBase: "https://foodies-back.herokuapp.com/api",
 			urlPrivate: "/private",
 			urlSignUp: "/signup",
 			urlLogin: "/login",
