@@ -18,7 +18,7 @@ const Layout = () => {
 
   return (
     <div>
-      <BrowserRouter basename={basename}>
+      <BrowserRouter>
         <ScrollToTop>
           <Navbar />
           <Routes>
