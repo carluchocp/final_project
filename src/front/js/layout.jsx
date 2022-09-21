@@ -4,7 +4,7 @@ import ScrollToTop from "./component/scrollToTop.jsx";
 
 import { SignUp } from "./pages/signup.jsx";
 import { Login } from "./pages/login.jsx";
-import { Single } from "./pages/single.jsx";
+import { Feed } from "./pages/feed.jsx"
 import injectContext from "./store/appContext.jsx";
 
 import { Navbar } from "./component/navbar.jsx";
@@ -24,7 +24,7 @@ const Layout = () => {
           <Routes>
             <Route element={<Login />} path="/" />
             <Route element={<SignUp />} path="/signup" />
-            <Route element={<Single />} path="/single/:theid" />
+            <Route element={<Feed />} path="/feed" />
             <Route element={<h1>Not found!</h1>} />
           </Routes>
           <Footer />
