@@ -1,8 +1,7 @@
 const getState = ({ getStore, getActions, setStore }) => {
 	return {
 		store: {
-			urlBase: "https://foodies-back.herokuapp.com/api",
-			urlPrivate: "/private",
+			urlBase: "http://127.0.0.1:3001/api",
 			urlSignUp: "/signup",
 			urlLogin: "/login",
 
@@ -12,6 +11,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 		actions: {
 			// Use getActions to call a function within a fuction
 			signUpCredentials: (user) => {
+				console.log("me estoy validando")
 				if (user.username == undefined ||
 					user.name == undefined ||
 					user.lastname ||
@@ -67,11 +67,13 @@ const getState = ({ getStore, getActions, setStore }) => {
 				}
 			},
 			userSignUp: async(user) => {
+				let store = getStore()
+				console.log("me ejecuto")
 				try {
-					let response = await fetch(`${urlBase}${urlSignUp}`, {
+					let response = await fetch(`${store.urlBase}${store.urlSignUp}`, {
 						method: 'POST',
 						headers: {
-							"content-Type":"application/json",
+							"Content-Type":"application/json",
 						},
 						body: JSON.stringify(user),
 					})
@@ -85,8 +87,9 @@ const getState = ({ getStore, getActions, setStore }) => {
 				}
 			},
 			userLogIn: async(user) => {
+				let store = getStore()
 				try {
-					let response = await fetch(`${urlBase}${urlLogin}`, {
+					let response = await fetch(`${store.urlBase}${store.urlLogin}`, {
 						method: 'POST', 
 						headers: {
 							"Content-Type": "application/json",

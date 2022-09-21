@@ -76,9 +76,18 @@ def login_user():
             return jsonify({"message":"Error, bad request"}), 400
         else:
             login_user = User.query.filter_by(email=email).first()
-            is_valid = check_password(login_user.password, password, login_user.salt)
-            token = create_access_token(identity=login_user.id)
-            print(token)
-            return jsonify(login_user.serialize())
+            if login_user is not None:
+                is_valid = check_password(login_user.password, password, login_user.salt)
+                print(is_valid)
+                if is_valid:
+                    token = create_access_token(identity=login_user.id)
+                    return jsonify({
+                    "token": token,
+                    }), 200
+                else:
+                    return jsonify("bad credentials"), 400
+            else:
+                return jsonify("bad credentials"), 400
+            
     return jsonify({"message":"bad credentials"})
 
