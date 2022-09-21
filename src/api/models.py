@@ -1,4 +1,4 @@
- from flask_sqlalchemy import SQLAlchemy
+from flask_sqlalchemy import SQLAlchemy
 
 db = SQLAlchemy()
 
@@ -26,7 +26,7 @@ class User(db.Model):
             "is_active": self.is_active,
         }
 
-class Post(db.model):
+class Post(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(150), unique=False, nullable=False)
     image_url = db.Column(db.String(150), unique=False, nullable=False)
@@ -34,7 +34,7 @@ class Post(db.model):
     caption = db.Column(db.String(300), unique=True, nullable=False)
     
     cloudinary_id = db.Column(db.String(120), unique=False, nullable=False) 
-    user_id = db.column(db.Integer, db.ForeingKey("user.id"), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
 
     def serialize(self):
         return {
