@@ -41,8 +41,13 @@ export const Login = () => {
   return (
     <div className="text-center">
       <div className="container">
+        <br />
+        <br />
+        <br />
+        <br />
         <form onSubmit={handleSubmit}>
           <h1>¡Bienvenido foodie! Inicia sesión </h1>
+          <br />
           <div className="form-group">
             <input
               type={"text"}
@@ -68,6 +73,10 @@ export const Login = () => {
         <p>
           ¿No tienes cuenta? <a href="/signup"> Registrate </a>
         </p>
+        <br />
+        <br />
+        <br />
+        <br />
       </div>
     </div>
   );
