@@ -4,10 +4,11 @@ This module takes care of starting the API Server, Loading the DB and Adding the
 import base64
 import os
 from flask import Flask, request, jsonify, url_for, Blueprint
-from api.models import db, User
+from api.models import db, User, Post
 from api.utils import generate_sitemap, APIException
 from werkzeug.security import generate_password_hash, check_password_hash
 from base64 import b64encode
+import cloudinary.uploader as uploader
 
 from flask_jwt_extended import create_access_token
 from flask_jwt_extended import get_jwt_identity
@@ -100,63 +101,68 @@ def login_user():
 @api.route('/feed', methods=['POST'])
 def upload_image():
     method_allowed(request, "POST")
-
-    image_file = request.files['file']
+    # print(request.files)
+    image_file = request.files['image']
     name = request.form.get('name')
     caption = request.form.get('caption')
 
-    if image_file.content_type not in  VALID_FORMATS:
+    print(image_file)
+    print(name, caption)
+    
+
+    if image_file.content_type not in VALID_FORMATS:
         return jsonify({"error": "File must be png, jpg, or jpeg"}), 400
 
-    if image_file is None or name or caption is None:
+    if image_file is None or name is None or caption is None:
         return jsonify({"error": "All fields are required(Name, file)"}), 400
 
     try: 
         cloudinary_upload = uploader.upload(image_file)
-        new_post = Post(name=name, caption=caption, image_url=cloudinary_upload["url"], cloudinary_id=cloudinary_upload["public_id"])
+        print(cloudinary_upload)
+        new_post = Post(name=name, caption=caption, image_url=cloudinary_upload["url"], cloudinary_id=cloudinary_upload["public_id"], user_id=1)
         db.session.add(new_post)
         db.session.commit()
         return jsonify({"message":"Post succesfully upload"})
     
     except Exception as error:
         db.session.rollback()
-        return jsonify({"error":"error"}), 500
+        return jsonify({"error":error.args}), 500
+    return jsonify([]), 200
+# @api.route('/feed', methods=['GET'])
+# def get_all_posts():
+#     method_allowed(request, "GET")
 
-@api.route('/feed', methods=['GET'])
-def get_all_posts():
-    method_allowed(request, "GET")
-
-    try:
-        posts = Post.query.all()
-        if posts is None:
-            return jsonify({"error": "No posts"})
+#     try:
+#         posts = Post.query.all()
+#         if posts is None:
+#             return jsonify({"error": "No posts"})
             
-        return jsonify(list(map(lambda item: item.serialize(), posts))) , 200
+#         return jsonify(list(map(lambda item: item.serialize(), posts))) , 200
 
-    except Exception as error:
-        return jsonify({"error": error}), 500 
+#     except Exception as error:
+#         return jsonify({"error": error}), 500 
 
-@api.route('/feed/<int:id>', methods=['DELETE'])
-def delete_post_by_id(id = None):
-    method_allowed(request, "DELETE")
+# @api.route('/feed/<int:id>', methods=['DELETE'])
+# def delete_post_by_id(id = None):
+#     method_allowed(request, "DELETE")
     
-    if id is None:
-        return jsonify({"error": "the post id is required"}), 400
+#     if id is None:
+#         return jsonify({"error": "the post id is required"}), 400
     
-    post = Post.query.get(id)
-    if post is None:
-        return jsonify({"error": "Post not found"}), 404
+#     post = Post.query.get(id)
+#     if post is None:
+#         return jsonify({"error": "Post not found"}), 404
 
-    try:
-        cloudinary_delete_response = uploader.destroy(post.cloudinary_id)
+#     try:
+#         cloudinary_delete_response = uploader.destroy(post.cloudinary_id)
 
-        if cloudinary_delete_response["result"] != "ok":
-            return jsonify({"error": "cloudinary deletion error"}) 
+#         if cloudinary_delete_response["result"] != "ok":
+#             return jsonify({"error": "cloudinary deletion error"}) 
         
-        db.session.delete(post)
-        db.session.commit()
+#         db.session.delete(post)
+#         db.session.commit()
 
-        return jsonify({"Msg": "Post deleted successfully"})
+#         return jsonify({"Msg": "Post deleted successfully"})
 
-    except Exception as error:
-        return jsonify({"error": error}), 500 
+#     except Exception as error:
+#         return jsonify({"error": error}), 500 
