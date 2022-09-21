@@ -115,9 +115,50 @@ const getState = ({ getStore, getActions, setStore }) => {
 				setStore({
 					token: ""
 				})
+			},
+			getPosts: async() => {
+				const store = getStore()
+				try {
+					const response = await fetch(`${store.urlBase}/feed`);
+					const data = await response.json();
+					if (!response.ok) {
+						throw new Error("getPosts error")
+					}
+					setStore({
+						...store,
+						posts: data,
+					});
+				} catch (error) {
+					console.log("getPosts Error", error);
+				  }
+			},
+			uploadImg: async(post) => {
+				const store = getStore()
+				try {
+					const response = await fetch(`${store.urlBase}/feed`, {
+						method: "POST",
+						mode: "no-cors",
+						body: "product",
+					});
+					getActions().getPosts();
+				} catch (error) {
+					console.log("getPosts Error", error);
+				  }
+			},
+			deletePost: async() => {
+				const store = getStore()
+				try {
+					const response = await fetch(`${store.urlBase}/feed/${post_id}`, {
+						method: "DELETE",
+					});
+					getActions().getPosts();
+				} catch (error) {
+					console.log("deletePosts Error", error);
+				  }
 			}
 		}
 	};
 };
+
 
 export default getState;

@@ -26,6 +26,25 @@ class User(db.Model):
             "is_active": self.is_active,
         }
 
+class Post(db.model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(150), unique=False, nullable=False)
+    image_url = db.Column(db.String(150), unique=False, nullable=False)
+    # video = db.Column(db.String(150), unique=False, nullable=False)
+    caption = db.Column(db.String(300), unique=True, nullable=False)
+    
+    cloudinary_id = db.Column(db.String(120), unique=False, nullable=False) 
+    user_id = db.column(db.Integer, db.ForeingKey("user.id"), nullable=False)
+
+    def serialize(self):
+        return {
+            "id": self.id,
+            "name": self.name,
+            "caption": self.caption,
+            "img_url": self.img_url,
+            "cloudinary_id": self.cloudinary_id
+        }
+
 # class Like(db.model):
 #     id = db.Column(db.Integer, primary_key=True)
     
@@ -61,19 +80,7 @@ class User(db.Model):
 #         }
 
 
-# class Post(db.model):
-#     id = db.Column(db.Integer, primary_key=True)
-#     image = db.Column(db.String(150), unique=False, nullable=False)
-#     # video = db.Column(db.String(150), unique=False, nullable=False)
-#     caption = db.Column(db.String(300), unique=True, nullable=False)
-     
-#     user_id = db.column(db.Integer, db.ForeingKey("user.id"), nullable=False)
 
-#     def serialize(self):
-#         return {
-#             "id": self.id,
-#             "caption": self.caption,
-#         }
 
 # class Saved(db.model):
 #     id = db.Column(db.Integer, primary_key=True)
