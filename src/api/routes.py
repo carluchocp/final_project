@@ -16,6 +16,12 @@ from flask_jwt_extended import JWTManager
 
 api = Blueprint('api', __name__)
 
+VALID_FORMATS = ["image/png", "image/jpg", "image/jpeg"]
+
+def method_allowed(request, method):
+    if request.method != method:
+        return jsonify({"error":"Method not allowed"}), 405
+
 def get_password(password, salt):
     return generate_password_hash(f"{password}{salt}")
 
@@ -91,3 +97,65 @@ def login_user():
             
     return jsonify({"message":"bad credentials"})
 
+@api.route('/feed', methods=['POST'])
+def upload_image():
+    method_allowed(request, "POST")
+
+    image_file = request.files['file']
+    name = request.form.get('name')
+
+    if image_file.content_type not in  VALID_FORMATS:
+        return jsonify({"error": "File must be png, jpg, or jpeg"}), 400
+
+    if image_file is None or name is None:
+        return jsonify({"error": "All fields are required(Name, file)"}), 400
+
+    try: 
+        cloudinary_upload = uploader.upload(image_file)
+        new_post = Post(name=name, caption=caption, image_url=cloudinary_upload["url"], cloudinary_id=cloudinary_upload["public_id"])
+        db.session.add(new_post)
+        db.session.commit()
+        return jsonify({"message":"Post succesfully upload"})
+    
+    except Exception as error:
+        db.session.rollback()
+        return jsonify({"error":"error"}), 500
+
+@api.route('/feed', methods=['GET'])
+def get_all_posts():
+    method_allowed(request, "GET")
+
+    try:
+        posts = Post.query.all()
+        if posts is None:
+            return jsonify({"error": "No posts"})
+            
+        return jsonify(list(map(lambda item: item.serialize(), posts))) , 200
+
+    except Exception as error:
+        return jsonify({"error": error}), 500 
+
+@api.route('/feed/<int:id>', methods=['DELETE'])
+def delete_post_by_id(id = None):
+    method_allowed(request, "DELETE")
+    
+    if id is None:
+        return jsonify({"error": "the post id is required"}), 400
+    
+    post = Post.query.get(id)
+    if post is None:
+        return jsonify({"error": "Post not found"}), 404
+
+    try:
+        cloudinary_delete_response = uploader.destroy(post.cloudinary_id)
+
+        if cloudinary_delete_response["result"] != "ok":
+            return jsonify({"error": "cloudinary deletion error"}) 
+        
+        db.session.delete(post)
+        db.session.commit()
+
+        return jsonify({"Msg": "Post deleted successfully"})
+
+    except Exception as error:
+        return jsonify({"error": error}), 500 
