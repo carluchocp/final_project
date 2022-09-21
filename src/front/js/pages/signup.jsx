@@ -2,6 +2,7 @@ import React, { useState, useEffect, useContext } from "react";
 import { Link } from "react-router-dom";
 import { Context } from "../store/appContext.jsx";
 import styles from "../../styles/signup.css";
+import logo from "../../img/foodies.png";
 
 export const SignUp = () => {
   const { store, actions } = useContext(Context);
@@ -9,12 +10,16 @@ export const SignUp = () => {
   return (
     <div className="text-center">
       <div className="container">
+        <br />
+        <br />
+        <br />
+        <br />
         <form>
-          <img
-            className="logo-foodies"
-            src="https://res.cloudinary.com/crunchbase-production/image/upload/c_lpad,h_256,w_256,f_auto,q_auto:eco,dpr_1/gwnfuhywcvf7jrordlk0"
-          />
+          <img className="logo-foodies" src={logo} />
+          <br />
+          <br />
           <h1>¡Hey foodie! Registrate aquí</h1>
+          <br />
           <div className="form-group">
             <input
               type={"text"}
@@ -33,7 +38,7 @@ export const SignUp = () => {
           </div>
           <div className="form-group">
             <input
-              type={"text"}
+              type={"date"}
               className="form-control m-1"
               placeholder="Ingresa tu edad"
               name="age"
@@ -51,7 +56,7 @@ export const SignUp = () => {
             <input
               type={"text"}
               className="form-control m-1"
-              placeholder="Ingresa tu email"
+              placeholder="Ingresa tu email (example@email.com)"
               name="email"
             />
           </div>
@@ -75,12 +80,6 @@ export const SignUp = () => {
       <br />
       <br />
       <br />
-      <br />
-      <br />
-      <br />
-      <Link to="/">
-        <button className="btn btn-primary">Back home</button>
-      </Link>
     </div>
   );
 };
