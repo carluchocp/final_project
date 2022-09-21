@@ -103,11 +103,12 @@ def upload_image():
 
     image_file = request.files['file']
     name = request.form.get('name')
+    caption = request.form.get('caption')
 
     if image_file.content_type not in  VALID_FORMATS:
         return jsonify({"error": "File must be png, jpg, or jpeg"}), 400
 
-    if image_file is None or name is None:
+    if image_file is None or name or caption is None:
         return jsonify({"error": "All fields are required(Name, file)"}), 400
 
     try: 
