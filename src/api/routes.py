@@ -29,6 +29,13 @@ def get_password(password, salt):
 def check_password(hash_password, password, salt):
     return check_password_hash(hash_password, f"{password}{salt}")
 
+@api.route('/private', methods=['GET'])
+def get_all_posts():
+    posts = Post.query.all()
+    if posts is None:
+        return jsonify({"error": "No posts"}), 400
+    print(posts)
+    return  jsonify(list(map(lambda post: post.serialize(), posts))), 200
 
 @api.route("/signup", methods=['POST'])
 def signup_user():
@@ -98,17 +105,16 @@ def login_user():
             
     return jsonify({"message":"bad credentials"})
 
-@api.route('/feed', methods=['POST'])
-def upload_image():
+@api.route('/main', methods=['POST'])
+@jwt_required()
+def upload_image(user_id = None):
     method_allowed(request, "POST")
     # print(request.files)
     image_file = request.files['image']
     name = request.form.get('name')
     caption = request.form.get('caption')
+    # user_id = request.form.get('user_id')
 
-    print(image_file)
-    print(name, caption)
-    
 
     if image_file.content_type not in VALID_FORMATS:
         return jsonify({"error": "File must be png, jpg, or jpeg"}), 400
@@ -116,10 +122,15 @@ def upload_image():
     if image_file is None or name is None or caption is None:
         return jsonify({"error": "All fields are required(Name, file)"}), 400
 
+    # if user_id is None:
+    #     return jsonify({"error":"User not found"}), 400
+
+
     try: 
+        user_id = get_jwt_identity()
         cloudinary_upload = uploader.upload(image_file)
         print(cloudinary_upload)
-        new_post = Post(name=name, caption=caption, image_url=cloudinary_upload["url"], cloudinary_id=cloudinary_upload["public_id"], user_id=1)
+        new_post = Post(name=name, caption=caption, image_url=cloudinary_upload["url"], cloudinary_id=cloudinary_upload["public_id"], user_id=user_id)
         db.session.add(new_post)
         db.session.commit()
         return jsonify({"message":"Post succesfully upload"})
@@ -128,41 +139,46 @@ def upload_image():
         db.session.rollback()
         return jsonify({"error":error.args}), 500
     return jsonify([]), 200
-# @api.route('/feed', methods=['GET'])
-# def get_all_posts():
-#     method_allowed(request, "GET")
 
-#     try:
-#         posts = Post.query.all()
-#         if posts is None:
-#             return jsonify({"error": "No posts"})
-            
-#         return jsonify(list(map(lambda item: item.serialize(), posts))) , 200
+@api.route('/feed', methods=['GET'])
+@jwt_required()
+def get_users_posts():
+    posts = Post.query.filter_by(user_id=get_jwt_identity()).all()
+    if posts is None:
+        return jsonify({"error": "No posts"}), 400
+    print(posts)
+    return  jsonify(list(map(lambda post: post.serialize(), posts))), 200 
+    # return jsonify([]), 200
 
-#     except Exception as error:
-#         return jsonify({"error": error}), 500 
-
-# @api.route('/feed/<int:id>', methods=['DELETE'])
-# def delete_post_by_id(id = None):
-#     method_allowed(request, "DELETE")
+@api.route('/main/<int:post_id>', methods=['DELETE'])
+@jwt_required()
+def delete_post_by_id(post_id = None):
+    method_allowed(request, "DELETE")
     
-#     if id is None:
-#         return jsonify({"error": "the post id is required"}), 400
+    if post_id is None:
+        return jsonify({"error": "the post id is required"}), 400
     
-#     post = Post.query.get(id)
-#     if post is None:
-#         return jsonify({"error": "Post not found"}), 404
+    post = Post.query.get(post_id)
+    print(post.user_id)
+    if post is None:
+        return jsonify({"error": "Post not found"}), 404
 
-#     try:
-#         cloudinary_delete_response = uploader.destroy(post.cloudinary_id)
-
-#         if cloudinary_delete_response["result"] != "ok":
-#             return jsonify({"error": "cloudinary deletion error"}) 
+    if post.user_id == get_jwt_identity():
         
-#         db.session.delete(post)
-#         db.session.commit()
+        try:
+            cloudinary_delete_response = uploader.destroy(post.cloudinary_id)
 
-#         return jsonify({"Msg": "Post deleted successfully"})
+            if cloudinary_delete_response["result"] != "ok":
+                return jsonify({"error": "cloudinary deletion error"}) 
+            
+            db.session.delete(post)
+            db.session.commit()
 
-#     except Exception as error:
-#         return jsonify({"error": error}), 500 
+            return jsonify({"message": "Post deleted successfully"}), 204
+
+        except Exception as error:
+            return jsonify({"error": error}), 500 
+    else:
+        return jsonify({"error":"Not authorize"}), 401
+
+    

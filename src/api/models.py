@@ -31,7 +31,7 @@ class Post(db.Model):
     name = db.Column(db.String(150), unique=False, nullable=False)
     image_url = db.Column(db.String(150), unique=False, nullable=False)
     # video = db.Column(db.String(150), unique=False, nullable=False)
-    caption = db.Column(db.String(300), unique=True, nullable=False)
+    caption = db.Column(db.String(300), unique=False, nullable=False)
     
     cloudinary_id = db.Column(db.String(120), unique=False, nullable=False) 
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
@@ -41,8 +41,9 @@ class Post(db.Model):
             "id": self.id,
             "name": self.name,
             "caption": self.caption,
-            "img_url": self.img_url,
-            "cloudinary_id": self.cloudinary_id
+            "image_url": self.image_url,
+            "cloudinary_id": self.cloudinary_id,
+            "user_id": self.user_id
         }
 
 # class Like(db.model):
