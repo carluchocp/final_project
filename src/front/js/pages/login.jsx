@@ -6,37 +6,37 @@ import "../../styles/home.css";
 export const Login = () => {
   const { store, actions } = useContext(Context);
 
-  const [userData, setUserData] = useState(initialState)
-  let navigate = useNavigate()
+  const [userData, setUserData] = useState(initialState);
+  let navigate = useNavigate();
 
   let initialState = {
-      email: "",
-      password: "",
-  }
+    email: "",
+    password: "",
+  };
 
-  let handleSubmit = async (event) =>{
-      event.preventDefault()
-      console.log("ejecuto el submit")
-      if (await actions.userLogIn(userData)) {
-        navigate("/feed")
-      } else {
-        alert("Bad credentials")
-      }
-      // if (actions.logInCredentials(userData)) {
-      //     if (actions.userLogIn(userData)) {
-      //       navigate("/feed")
-      //     }
-      // } else {
-      //   console.log("registrado fallido")
-      // }
-    } 
+  let handleSubmit = async (event) => {
+    event.preventDefault();
+    console.log("ejecuto el submit");
+    if (await actions.userLogIn(userData)) {
+      navigate("/feed");
+    } else {
+      alert("Bad credentials");
+    }
+    // if (actions.logInCredentials(userData)) {
+    //     if (actions.userLogIn(userData)) {
+    //       navigate("/feed")
+    //     }
+    // } else {
+    //   console.log("registrado fallido")
+    // }
+  };
 
-  let handleChange = (event) =>{
-  setUserData({
-          ...userData,
-          [event.target.name]: event.target.value,
-      })
-  }
+  let handleChange = (event) => {
+    setUserData({
+      ...userData,
+      [event.target.name]: event.target.value,
+    });
+  };
 
   return (
     <div className="text-center">
@@ -66,12 +66,14 @@ export const Login = () => {
               onChange={handleChange}
             />
           </div>
-        <div>
-            <button className="btn btn-primary m-3" type="submit">Iniciar Sesión</button>
-        </div>
+          <div>
+            <button className="btn btn-primary m-3" type="submit">
+              Iniciar Sesión
+            </button>
+          </div>
         </form>
         <p>
-          ¿No tienes cuenta? <a href="/signup"> Registrate </a>
+          ¿No tienes cuenta? <a href="/signup">Registrate </a>
         </p>
         <br />
         <br />
