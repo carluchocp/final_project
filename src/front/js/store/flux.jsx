@@ -6,7 +6,10 @@ const getState = ({ getStore, getActions, setStore }) => {
 			urlLogin: "/login",
 
 			users: [],
-			tokens: localStorage.getItem("token") || ""
+			tokens: localStorage.getItem("token") || "",
+
+			posts: [],
+			saveds: []
 		},
 		actions: {
 			// Use getActions to call a function within a fuction
@@ -155,6 +158,22 @@ const getState = ({ getStore, getActions, setStore }) => {
 				} catch (error) {
 					console.log("deletePosts Error", error);
 				  }
+			},
+			addSaveds: (item) => {
+				const store = getStore()
+				const exist = store.saveds.find((saved) => saved.created == item.created)
+				if(!exist){
+					setStore({
+						...store,
+						saveds: [...store.saveds, item] 
+					})
+				}else{
+					const updatedSaveds = store.saveds.filter((saved) => saved.created != item.created) 
+					setStore({
+						...store,
+						saveds: updatedsaveds
+					})
+				}
 			}
 		}
 	};

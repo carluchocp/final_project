@@ -4,7 +4,7 @@ This module takes care of starting the API Server, Loading the DB and Adding the
 import base64
 import os
 from flask import Flask, request, jsonify, url_for, Blueprint
-from api.models import db, User, Post
+from api.models import db, User, Post, Saved
 from api.utils import generate_sitemap, APIException
 from werkzeug.security import generate_password_hash, check_password_hash
 from base64 import b64encode
@@ -181,4 +181,25 @@ def delete_post_by_id(post_id = None):
     else:
         return jsonify({"error":"Not authorize"}), 401
 
+@api.route('/main/saved/<int:post_id>', methods=['GET'])
+@jwt_required()
+def saved_post(post_id = None):
+    # saved = Post.query.filter_by(user_id=get_jwt_identity()).first()
+    saved = Post.query.get(post_id)
+    print(type(post_id))
+    if saved is None:
+        return jsonify({"error": "Post not found"}), 404
     
+    try:
+        user_id = get_jwt_identity()
+        print(user_id)
+        new_saved = Saved(user_id=user_id, post_id=post_id)
+        print(new_saved)
+        db.session.add(new_saved)
+        db.session.commit()
+        return jsonify(new_saved.serialize()), 200
+    except Exception as error:
+        db.session.rollback()
+        return jsonify({"error":f'${error.args}'}), 400
+
+    return jsonify([]), 200
