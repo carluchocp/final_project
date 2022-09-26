@@ -4,7 +4,7 @@ db = SQLAlchemy()
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(15), unique=False, nullable=False)
+    username = db.Column(db.String(15), unique=True, nullable=False)
     name = db.Column(db.String(50), unique=False, nullable=False)
     lastname = db.Column(db.String(50), unique=False, nullable=False)
     age = db.Column(db.String(50), unique=False, nullable=False)
@@ -46,6 +46,23 @@ class Post(db.Model):
             "user_id": self.user_id
         }
 
+class Saved(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+
+    user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
+    post_id = db.Column(db.Integer, db.ForeignKey("post.id"), nullable=False)
+
+    __table_args__ = (db.UniqueConstraint(
+        "user_id",
+        "post_id",
+        name = "message_error",
+    ),)
+
+    def serialize(self):
+        return {
+            "id": self.id,
+        }
+
 # class Like(db.model):
 #     id = db.Column(db.Integer, primary_key=True)
     
@@ -83,19 +100,4 @@ class Post(db.Model):
 
 
 
-# class Saved(db.model):
-#     id = db.Column(db.Integer, primary_key=True)
 
-#     user_id = db.column(db.Integer, db.ForeingKey("user.id"), nullable=False)
-#     post_id = db.column(db.Integer, db.ForeingKey("post.id"), nullable=False)
-
-#     __table_args__ = (db.UniqueConstraint(
-#         "user_id",
-#         "post_id",
-#         name = "message_error",
-#     ),)
-
-#     def serialize(self):
-#         return {
-#             "id": self.id,
-#         }
