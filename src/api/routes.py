@@ -203,3 +203,46 @@ def saved_post(post_id = None):
         return jsonify({"error":f'${error.args}'}), 400
 
     return jsonify([]), 200
+
+@api.route('/search/users', methods=['POST'])
+def serch_users():
+
+    search = request.json.get('search')
+    users = User.query.all()
+    print(users)
+
+    results = []
+
+    for user in users:
+        if search in user.username:
+            results.append(user) 
+
+    print(results)
+
+    if users is None:
+        return jsonify({"error": "User not found"}), 404
+
+    if search is None:
+        return jsonify({"error": "You must fill this field"}), 400
+
+    return jsonify(list(map(lambda item: item.serialize(), results))), 200
+
+@api.route('/search/posts', methods=['POST'])
+def serch_posts():
+
+    search = request.json.get('search')
+    posts = Post.query.all()
+
+    results = []
+
+    for post in posts:
+        if search in post.name:
+            results.append(post)
+
+    if post is None:
+        return jsonify({"error": "Post not found"}), 404
+
+    if search is None:
+        return jsonify({"error": "You must fill this field"}), 400
+
+    return jsonify(list(map(lambda item: item.serialize(), results))), 200

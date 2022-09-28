@@ -174,6 +174,38 @@ const getState = ({ getStore, getActions, setStore }) => {
 						saveds: updatedsaveds
 					})
 				}
+			},
+			searchUsers: async() => {
+				const store = getStore()
+				try {
+					const response = await fetch(`${urlBase}/search/users`);
+					const data = response.json();
+					if (!response.ok) {
+						throw new Error("searchUsers error")
+					}
+					setStore({
+						...store,
+						users: data
+					})
+				} catch (error) {
+					console.log("searchUsers Error", error);
+				}
+			},
+			searchPosts: async() => {
+				const store = getStore()
+				try {
+					const response = await fetch(`${urlBase}/search/posts`);
+					const data = response.json();
+					if (!response.ok) {
+						throw new Error("searchPosts error")
+					}
+					setStore({
+						...store,
+						posts: data
+					})
+				} catch (error) {
+					console.log("searchPosts Error", error);
+				}
 			}
 		}
 	};
