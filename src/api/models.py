@@ -4,7 +4,7 @@ db = SQLAlchemy()
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(15), unique=False, nullable=False)
+    username = db.Column(db.String(15), unique=True, nullable=False)
     name = db.Column(db.String(50), unique=False, nullable=False)
     lastname = db.Column(db.String(50), unique=False, nullable=False)
     age = db.Column(db.String(50), unique=False, nullable=False)
@@ -24,6 +24,43 @@ class User(db.Model):
             "username": self.username,
             "email": self.email,
             "is_active": self.is_active,
+        }
+
+class Post(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(150), unique=False, nullable=False)
+    image_url = db.Column(db.String(150), unique=False, nullable=False)
+    # video = db.Column(db.String(150), unique=False, nullable=False)
+    caption = db.Column(db.String(300), unique=False, nullable=False)
+    
+    cloudinary_id = db.Column(db.String(120), unique=False, nullable=False) 
+    user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
+
+    def serialize(self):
+        return {
+            "id": self.id,
+            "name": self.name,
+            "caption": self.caption,
+            "image_url": self.image_url,
+            "cloudinary_id": self.cloudinary_id,
+            "user_id": self.user_id
+        }
+
+class Saved(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+
+    user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
+    post_id = db.Column(db.Integer, db.ForeignKey("post.id"), nullable=False)
+
+    __table_args__ = (db.UniqueConstraint(
+        "user_id",
+        "post_id",
+        name = "message_error",
+    ),)
+
+    def serialize(self):
+        return {
+            "id": self.id,
         }
 
 # class Like(db.model):
@@ -61,33 +98,6 @@ class User(db.Model):
 #         }
 
 
-# class Post(db.model):
-#     id = db.Column(db.Integer, primary_key=True)
-#     image = db.Column(db.String(150), unique=False, nullable=False)
-#     # video = db.Column(db.String(150), unique=False, nullable=False)
-#     caption = db.Column(db.String(300), unique=True, nullable=False)
-     
-#     user_id = db.column(db.Integer, db.ForeingKey("user.id"), nullable=False)
 
-#     def serialize(self):
-#         return {
-#             "id": self.id,
-#             "caption": self.caption,
-#         }
 
-# class Saved(db.model):
-#     id = db.Column(db.Integer, primary_key=True)
 
-#     user_id = db.column(db.Integer, db.ForeingKey("user.id"), nullable=False)
-#     post_id = db.column(db.Integer, db.ForeingKey("post.id"), nullable=False)
-
-#     __table_args__ = (db.UniqueConstraint(
-#         "user_id",
-#         "post_id",
-#         name = "message_error",
-#     ),)
-
-#     def serialize(self):
-#         return {
-#             "id": self.id,
-#         }

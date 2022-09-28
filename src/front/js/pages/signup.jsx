@@ -2,28 +2,29 @@ import React, { useState, useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Context } from "../store/appContext.jsx";
 import styles from "../../styles/signup.css";
+import logo from "../../img/foodies.png";
 
 let initialState = {
-    username: "",
-    name: "",
-    lastname: "",
-    age: "",
-    email: "",
-    password: "",
-  }
+  username: "",
+  name: "",
+  lastname: "",
+  age: "",
+  email: "",
+  password: "",
+};
 
 export const SignUp = () => {
   const { store, actions } = useContext(Context);
 
-  const [userData, setUserData] = useState(initialState)
-  let navigate = useNavigate()
+  const [userData, setUserData] = useState(initialState);
+  let navigate = useNavigate();
 
-  let handleSubmit = async (event) =>{
-    event.preventDefault()
+  let handleSubmit = async (event) => {
+    event.preventDefault();
     if (actions.userSignUp(userData)) {
-      navigate("/feed")
+      navigate("/");
     } else {
-      console.log("registrado fallido")
+      console.log("registrado fallido");
     }
     // console.log("me ejecuto el submit")
     // if (actions.signUpCredentials(userData)) {
@@ -32,29 +33,33 @@ export const SignUp = () => {
     // } else {
     //   alert("Invalid credentials")
     // }
-  }
+  };
 
-  let handleChange = ({ target }) =>{
-	setUserData({
-    ...userData,
-    [target.name]: target.value,
-    })
+  let handleChange = ({ target }) => {
+    setUserData({
+      ...userData,
+      [target.name]: target.value,
+    });
   };
 
   return (
     <div className="text-center">
       <div className="container">
+        <br />
+        <br />
+        <br />
+        <br />
         <form onSubmit={handleSubmit}>
-          <img
-            className="logo-foodies"
-            src="https://res.cloudinary.com/crunchbase-production/image/upload/c_lpad,h_256,w_256,f_auto,q_auto:eco,dpr_1/gwnfuhywcvf7jrordlk0"
-          />
+          <img className="logo-foodies" src={logo} />
+          <br />
+          <br />
           <h1>¡Hey foodie! Registrate aquí</h1>
+          <br />
           <div className="form-group">
             <input
               type={"text"}
               className="form-control m-1"
-              placeholder="Ingresa tu nombre"
+              placeholder="Nombre"
               name="name"
               onChange={handleChange}
             />
@@ -63,16 +68,16 @@ export const SignUp = () => {
             <input
               type={"text"}
               className="form-control m-1"
-              placeholder="Ingresa tu apellido"
+              placeholder="Apellido"
               name="lastname"
               onChange={handleChange}
             />
           </div>
           <div className="form-group">
             <input
-              type={"text"}
+              type={"date"}
               className="form-control m-1"
-              placeholder="Ingresa tu edad"
+              placeholder="Edad"
               name="age"
               onChange={handleChange}
             />
@@ -81,7 +86,7 @@ export const SignUp = () => {
             <input
               type={"text"}
               className="form-control m-1"
-              placeholder="Ingresa tu usuario (debe contener un maximo de 12 caracteres)"
+              placeholder="Usuario (Debe contener un máximo de 12 carácteres)"
               name="username"
               onChange={handleChange}
             />
@@ -90,7 +95,7 @@ export const SignUp = () => {
             <input
               type={"text"}
               className="form-control m-1"
-              placeholder="Ingresa tu email(debe ser un gmail o hotmail)"
+              placeholder="Email (Debe ser un gmail o hotmail)"
               name="email"
               onChange={handleChange}
             />
@@ -99,16 +104,18 @@ export const SignUp = () => {
             <input
               type={"password"}
               className="form-control m-1"
-              placeholder="Ingresa tu contraseña (debe tener al menos 8 caracteres)"
+              placeholder="Contraseña (Debe tener al menos 8 carácteres)"
               name="password"
               onChange={handleChange}
             />
           </div>
-        <div>
-              <button className="btn btn-primary m-3" type="submit">Registrar</button>          
-        </div>
+          <div>
+            <button className="btn btn-primary m-3" type="submit">
+              Registrar
+            </button>
+          </div>
         </form>
-        
+
         <p>
           ¿Ya tienes una cuenta? <a href="/"> Inicia sesión </a>
         </p>
@@ -117,12 +124,6 @@ export const SignUp = () => {
       <br />
       <br />
       <br />
-      <br />
-      <br />
-      <br />
-      <Link to="/">
-        <button className="btn btn-primary">Back home</button>
-      </Link>
     </div>
   );
 };
