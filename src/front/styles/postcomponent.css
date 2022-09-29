@@ -1,0 +1,56 @@
+.recipes-feed {
+  margin-left: 175px;
+  margin-right: 425px;
+}
+
+.container-post {
+  height: 326px;
+  width: 980px;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  margin-left: 20px;
+  margin-right: 20px;
+}
+
+.card-text {
+  text-align: justify;
+  padding-top: 10px;
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+.card-level-recipe {
+  padding-top: 2px;
+  padding-bottom: 2px;
+  margin: 5px;
+  text-align: justify;
+}
+
+.card-user-recipe {
+  text-align: justify;
+  padding-top: 2px;
+  padding-bottom: 2px;
+  margin: 5px;
+}
+
+.container-buttons {
+  display: flex;
+  margin-left: 300px;
+  margin-top: 60px;
+}
+
+.like-button {
+  margin-left: 5px;
+  border: 0;
+  background-color: white;
+}
+.favorite-button {
+  margin-left: 5px;
+  border: 0;
+  background-color: white;
+}
+
+.text-like-button,
+.text-favorite-button {
+  margin-left: 15px;
+}

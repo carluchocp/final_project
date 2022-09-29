@@ -64,7 +64,7 @@ export const Navbar = () => {
         </ul>
         <div className="ml-auto">
           <Link to="/signup">
-            <button className="btn btn-primary">Sign Up</button>
+            <button className="btn btn-primary">Registrate</button>
           </Link>
         </div>
       </div>

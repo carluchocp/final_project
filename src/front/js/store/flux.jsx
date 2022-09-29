@@ -102,7 +102,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 					if (response.ok) {
 						let data = await response.json()
 						setStore({
-							token: data.token
+							tokens: data.token
 						})
 						localStorage.setItem("token", data.token)
 						return true
@@ -178,15 +178,26 @@ const getState = ({ getStore, getActions, setStore }) => {
 			searchUsers: async() => {
 				const store = getStore()
 				try {
-					const response = await fetch(`${urlBase}/search/users`);
-					const data = response.json();
-					if (!response.ok) {
-						throw new Error("searchUsers error")
-					}
-					setStore({
+					const response = await fetch(`${urlBase}/search/users`, {
+						method: 'POST', 
+						headers: {
+							"Content-Type": "application/json",
+						},
+						body: JSON.stringify(user), 
+					});
+					
+					if (response.ok) {
+						let data = response.json()
+						setStore({
 						...store,
 						users: data
-					})
+						})
+						return true
+					} else {
+						throw new Error("searchUsers error")
+						return false
+					}
+					
 				} catch (error) {
 					console.log("searchUsers Error", error);
 				}
@@ -194,15 +205,26 @@ const getState = ({ getStore, getActions, setStore }) => {
 			searchPosts: async() => {
 				const store = getStore()
 				try {
-					const response = await fetch(`${urlBase}/search/posts`);
-					const data = response.json();
-					if (!response.ok) {
-						throw new Error("searchPosts error")
-					}
-					setStore({
+					const response = await fetch(`${urlBase}/search/posts`, {
+						method: 'POST', 
+						headers: {
+							"Content-Type": "application/json",
+						},
+						body: JSON.stringify(post), 
+					});
+					
+					if (response.ok) {
+						let data = response.json()
+						setStore({
 						...store,
 						posts: data
-					})
+						})
+						return true
+					} else {
+						throw new Error("searchPosts error")
+						return false
+					}
+					
 				} catch (error) {
 					console.log("searchPosts Error", error);
 				}
