@@ -5,7 +5,7 @@ import styles from "../../styles/navbar.css";
 
 export const Navbar = () => {
   return (
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <nav className="navbar navbar-expand-lg navbar-light bg-light">
       <Link to="/">
         <img className="logo-foodies py-0 my-0 cover" src={logo} />
       </Link>
@@ -18,24 +18,30 @@ export const Navbar = () => {
         aria-expanded="false"
         aria-label="Toggle navigation"
       >
-        <span class="navbar-toggler-icon"></span>
+        <span className="navbar-toggler-icon"></span>
       </button>
 
-      <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul class="navbar-nav mr-auto">
-          <li class="nav-item active">
-            <a class="nav-link" href="/feed">
-              Feed <span class="sr-only">(current)</span>
+      <div className="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul className="navbar-nav mr-auto">
+          <li className="nav-item active">
+            <a className="nav-link" href="/feed">
+              <i className="fa-solid fa-house"></i> Feed{" "}
+              <span className="sr-only">(current)</span>
             </a>
           </li>
-          <li class="nav-item">
-            <a class="nav-link" href="/search">
-              Búsqueda
+          <li className="nav-item">
+            <a className="nav-link" href="/search">
+              <i className="fa-solid fa-magnifying-glass"></i> Búsqueda
             </a>
           </li>
-          <li class="nav-item dropdown">
+          <li className="nav-item">
+            <a className="nav-link" href="#">
+              <i className="fa-regular fa-star"></i> Favoritos
+            </a>
+          </li>
+          <li className="nav-item dropdown">
             <a
-              class="nav-link dropdown-toggle"
+              className="nav-link dropdown-toggle"
               href="/main"
               id="navbarDropdown"
               role="button"
@@ -43,18 +49,13 @@ export const Navbar = () => {
               aria-haspopup="true"
               aria-expanded="false"
             >
-              Mi espacio
+              <i className="fa-regular fa-user"></i> Mi espacio
             </a>
-            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-              <a class="dropdown-item" href="/logout">
+            <div className="dropdown-menu" aria-labelledby="navbarDropdown">
+              <a className="dropdown-item" href="/logout">
                 Cerrar sesión
               </a>
             </div>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link disabled" href="#">
-              Favoritos
-            </a>
           </li>
           <div className="ml-auto">
             <Link to="/newrecipe">
