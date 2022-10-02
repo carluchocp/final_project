@@ -48,7 +48,6 @@ export const SignUp = () => {
         <br />
         <br />
         <br />
-        <br />
         <form onSubmit={handleSubmit}>
           <img className="logo-foodies" src={logo} />
           <br />

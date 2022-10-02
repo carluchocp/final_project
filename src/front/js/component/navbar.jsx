@@ -58,7 +58,7 @@ export const Navbar = () => {
             </div>
           </li>
           <div className="ml-auto">
-            <Link to="/newrecipe">
+            <Link to="/newpost">
               <button className="btn btn-primary">Nueva Receta</button>
             </Link>
           </div>

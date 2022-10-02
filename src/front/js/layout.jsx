@@ -6,6 +6,7 @@ import { SignUp } from "./pages/signup.jsx";
 import { Login } from "./pages/login.jsx";
 import { Feed } from "./pages/feed.jsx";
 import { Main } from "./pages/main.jsx";
+import { NewPost } from "./pages/newpost.jsx";
 import injectContext from "./store/appContext.jsx";
 
 import { Navbar } from "./component/navbar.jsx";
@@ -27,6 +28,7 @@ const Layout = () => {
             <Route element={<SignUp />} path="/signup" />
             <Route element={<Feed />} path="/feed" />
             <Route element={<Main />} path="/main" />
+            <Route element={<NewPost />} path="/newpost" />
             <Route element={<h1>Not found!</h1>} />
           </Routes>
           <Footer />
