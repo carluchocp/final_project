@@ -4,31 +4,27 @@ import { Context } from "../store/appContext.jsx";
 import logo from "../../img/foodies.png";
 import styles from "../../styles/postcomponent.css";
 
-export const Post = () => {
+export const Post = ({post}) => {
   return (
     <div className="container-post">
       <div className="card mb-3">
         <div className="row g-0">
           <div className="col-md-4">
             <img
-              src="https://th.bing.com/th/id/R.bc7f1914b1109495ed9edb0dfae00bf0?rik=opGCn2cSlZKi3w&pid=ImgRaw&r=0"
+              src={post.image_url}
               className="img-fluid rounded-start"
               alt="..."
             />
           </div>
           <div className="col-md-8">
             <div className="card-body">
-              <h4 className="card-title">Nombre Usuario | Ratatouille</h4>
+              <h4 className="card-title">{post.username} | {post.name}</h4>
               <p className="card-text">
-                Es una preparación típica de la cocina francesa que consiste en
-                un estofado de diferentes hortalizas típicas del sur de Francia.
-                Proviene de la región de Provenza y del antiguo condado de Niza
-                (sureste de Francia), por lo que se la llama también ratatouille
-                niçoise.
+                {post.caption}
               </p>
               <p className="card-level-recipe">
                 <medium className="text-muted">
-                  📊 Principiante | 🕓 2h | 🍽️ 13 porciones
+                  📊 {post.level} | 🕓 {post.time} | 🍽️ {post.portions}
                 </medium>
               </p>
               <div className="container-buttons">
@@ -72,15 +68,7 @@ export const Post = () => {
                     data-bs-parent="#accordionExample"
                   >
                     <div className="accordion-body">
-                      <strong>This is the first item's accordion body.</strong>{" "}
-                      It is shown by default, until the collapse plugin adds the
-                      appropriate classes that we use to style each element.
-                      These classes control the overall appearance, as well as
-                      the showing and hiding via CSS transitions. You can modify
-                      any of this with custom CSS or overriding our default
-                      variables. It's also worth noting that just about any HTML
-                      can go within the <code>.accordion-body</code>, though the
-                      transition does limit overflow.
+                      {post.ingredients}
                     </div>
                   </div>
                 </div>
@@ -104,15 +92,7 @@ export const Post = () => {
                     data-bs-parent="#accordionExample"
                   >
                     <div className="accordion-body">
-                      <strong>This is the second item's accordion body.</strong>{" "}
-                      It is hidden by default, until the collapse plugin adds
-                      the appropriate classes that we use to style each element.
-                      These classes control the overall appearance, as well as
-                      the showing and hiding via CSS transitions. You can modify
-                      any of this with custom CSS or overriding our default
-                      variables. It's also worth noting that just about any HTML
-                      can go within the <code>.accordion-body</code>, though the
-                      transition does limit overflow.
+                      {post.preparation}
                     </div>
                   </div>
                 </div>

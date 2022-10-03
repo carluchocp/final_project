@@ -13,6 +13,9 @@ export const SearchUsers = (props) => {
         <h1>aqui puedes buscar a cualquier usuario</h1>
       </div>
       <br />
+      <div>
+        <h4>si quieres buscar una receta dale <a href="/search/posts">click aqui</a></h4>
+      </div>
       <br />
       <div className="row d-flex justify-content-center">
         <div className="col-10">
