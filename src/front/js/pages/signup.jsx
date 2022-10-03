@@ -22,7 +22,7 @@ export const SignUp = () => {
   let handleSubmit = async (event) => {
     event.preventDefault();
     if (actions.userSignUp(userData)) {
-      navigate("/feed");
+      navigate("/");
     } else {
       console.log("registrado fallido");
     }

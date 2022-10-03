@@ -10,7 +10,7 @@ export const Navbar = () => {
         <img className="logo-foodies py-0 my-0 cover" src={logo} />
       </Link>
       <button
-        class="navbar-toggler"
+        className="navbar-toggler"
         type="button"
         data-toggle="collapse"
         data-target="#navbarSupportedContent"
@@ -30,7 +30,7 @@ export const Navbar = () => {
             </a>
           </li>
           <li className="nav-item">
-            <a className="nav-link" href="/search">
+            <a className="nav-link" href="/search/users">
               <i className="fa-solid fa-magnifying-glass"></i> Búsqueda
             </a>
           </li>
