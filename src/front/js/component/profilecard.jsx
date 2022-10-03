@@ -20,9 +20,11 @@ export const ProfileCard = () => {
             <div className="card-body">
               <div className="header-profile">
                 <h4 className="card-title">Diana Gómez</h4>
-                <button className="button-settings">
-                  <i className="fa-solid fa-gear"></i>
-                </button>
+                <Link to="/settings">
+                  <button className="button-settings">
+                    <i className="fa-solid fa-gear"></i>
+                  </button>
+                </Link>
               </div>
               <p className="card-level-recipe">
                 <medium className="text-muted">
