@@ -32,6 +32,11 @@ class Post(db.Model):
     image_url = db.Column(db.String(150), unique=False, nullable=False)
     # video = db.Column(db.String(150), unique=False, nullable=False)
     caption = db.Column(db.String(300), unique=False, nullable=False)
+    ingredients = db.Column(db.String(300), unique=False, nullable=False)
+    preparation = db.Column(db.String(300), unique=False, nullable=False)
+    level = db.Column(db.String(30), unique=False, nullable=False)
+    time = db.Column(db.String(30), unique=False, nullable=False)
+    portions = db.Column(db.String(30), unique=False, nullable=False)
     
     cloudinary_id = db.Column(db.String(120), unique=False, nullable=False) 
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
@@ -43,7 +48,13 @@ class Post(db.Model):
             "caption": self.caption,
             "image_url": self.image_url,
             "cloudinary_id": self.cloudinary_id,
-            "user_id": self.user_id
+            "user_id": self.user_id,
+            "username": User.query.get(self.user_id).username,
+            "ingredients": self.ingredients,
+            "preparation": self.preparation,
+            "level": self.level,
+            "time": self.time,
+            "portions": self.portions,
         }
 
 class Saved(db.Model):

@@ -113,13 +113,17 @@ def upload_image(user_id = None):
     image_file = request.files['image']
     name = request.form.get('name')
     caption = request.form.get('caption')
-    # user_id = request.form.get('user_id')
+    ingredients = request.form.get('ingredients')
+    preparation = request.form.get('preparation')
+    level = request.form.get('level')
+    time = request.form.get('time')
+    portions = request.form.get('portions')
 
 
     if image_file.content_type not in VALID_FORMATS:
         return jsonify({"error": "File must be png, jpg, or jpeg"}), 400
 
-    if image_file is None or name is None or caption is None:
+    if image_file is None or name is None or caption is None or ingredients is None or preparation is None or level is None or time is None or portions is None:
         return jsonify({"error": "All fields are required(Name, file)"}), 400
 
     # if user_id is None:
@@ -130,7 +134,7 @@ def upload_image(user_id = None):
         user_id = get_jwt_identity()
         cloudinary_upload = uploader.upload(image_file)
         print(cloudinary_upload)
-        new_post = Post(name=name, caption=caption, image_url=cloudinary_upload["url"], cloudinary_id=cloudinary_upload["public_id"], user_id=user_id)
+        new_post = Post(name=name, caption=caption, image_url=cloudinary_upload["url"], cloudinary_id=cloudinary_upload["public_id"], user_id=user_id, ingredients=ingredients, preparation=preparation, level=level, time=time, portions=portions)
         db.session.add(new_post)
         db.session.commit()
         return jsonify({"message":"Post succesfully upload"})
@@ -142,13 +146,22 @@ def upload_image(user_id = None):
 
 @api.route('/feed', methods=['GET'])
 @jwt_required()
+def get_followed_users_posts():
+    posts = Post.query.all()
+    if posts is None:
+        return jsonify({"error": "No posts"}), 400
+    print(posts)
+    return  jsonify(list(map(lambda post: post.serialize(), posts))), 200 
+    # return jsonify([]), 200
+
+@api.route('/main', methods=['GET'])
+@jwt_required()
 def get_users_posts():
     posts = Post.query.filter_by(user_id=get_jwt_identity()).all()
     if posts is None:
         return jsonify({"error": "No posts"}), 400
     print(posts)
     return  jsonify(list(map(lambda post: post.serialize(), posts))), 200 
-    # return jsonify([]), 200
 
 @api.route('/main/<int:post_id>', methods=['DELETE'])
 @jwt_required()

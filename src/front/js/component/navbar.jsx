@@ -29,7 +29,7 @@ export const Navbar = () => {
             </a>
           </li>
           <li className="nav-item">
-            <a className="nav-link" href="/search">
+            <a className="nav-link" href="/search/users">
               Búsqueda
             </a>
           </li>

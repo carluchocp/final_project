@@ -122,7 +122,11 @@ const getState = ({ getStore, getActions, setStore }) => {
 			getPosts: async() => {
 				const store = getStore()
 				try {
-					const response = await fetch(`${store.urlBase}/feed`);
+					const response = await fetch(`${store.urlBase}/feed`, {
+						headers:{
+							Authorization: `Bearer ${store.tokens}`
+						}
+					});
 					const data = await response.json();
 					if (!response.ok) {
 						throw new Error("getPosts error")
@@ -178,7 +182,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 			searchUsers: async() => {
 				const store = getStore()
 				try {
-					const response = await fetch(`${urlBase}/search/users`, {
+					const response = await fetch(`${store.urlBase}/search/users`, {
 						method: 'POST', 
 						headers: {
 							"Content-Type": "application/json",
@@ -187,7 +191,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 					});
 					
 					if (response.ok) {
-						let data = response.json()
+						let data = await response.json()
 						setStore({
 						...store,
 						users: data
@@ -202,19 +206,19 @@ const getState = ({ getStore, getActions, setStore }) => {
 					console.log("searchUsers Error", error);
 				}
 			},
-			searchPosts: async() => {
+			searchPosts: async(posts) => {
 				const store = getStore()
 				try {
-					const response = await fetch(`${urlBase}/search/posts`, {
+					const response = await fetch(`${store.urlBase}/search/posts`, {
 						method: 'POST', 
 						headers: {
 							"Content-Type": "application/json",
 						},
-						body: JSON.stringify(post), 
+						body: JSON.stringify(posts), 
 					});
 					
 					if (response.ok) {
-						let data = response.json()
+						let data = await response.json()
 						setStore({
 						...store,
 						posts: data
@@ -222,7 +226,6 @@ const getState = ({ getStore, getActions, setStore }) => {
 						return true
 					} else {
 						throw new Error("searchPosts error")
-						return false
 					}
 					
 				} catch (error) {
