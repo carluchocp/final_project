@@ -1,10 +1,10 @@
- from flask_sqlalchemy import SQLAlchemy
+from flask_sqlalchemy import SQLAlchemy
 
 db = SQLAlchemy()
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(15), unique=False, nullable=False)
+    username = db.Column(db.String(15), unique=True, nullable=False)
     name = db.Column(db.String(50), unique=False, nullable=False)
     lastname = db.Column(db.String(50), unique=False, nullable=False)
     age = db.Column(db.String(50), unique=False, nullable=False)
@@ -26,23 +26,52 @@ class User(db.Model):
             "is_active": self.is_active,
         }
 
-class Post(db.model):
+class Post(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(150), unique=False, nullable=False)
     image_url = db.Column(db.String(150), unique=False, nullable=False)
     # video = db.Column(db.String(150), unique=False, nullable=False)
-    caption = db.Column(db.String(300), unique=True, nullable=False)
+    caption = db.Column(db.String(300), unique=False, nullable=False)
+    ingredients = db.Column(db.String(300), unique=False, nullable=False)
+    preparation = db.Column(db.String(300), unique=False, nullable=False)
+    level = db.Column(db.String(30), unique=False, nullable=False)
+    time = db.Column(db.String(30), unique=False, nullable=False)
+    portions = db.Column(db.String(30), unique=False, nullable=False)
     
     cloudinary_id = db.Column(db.String(120), unique=False, nullable=False) 
-    user_id = db.column(db.Integer, db.ForeingKey("user.id"), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
 
     def serialize(self):
         return {
             "id": self.id,
             "name": self.name,
             "caption": self.caption,
-            "img_url": self.img_url,
-            "cloudinary_id": self.cloudinary_id
+            "image_url": self.image_url,
+            "cloudinary_id": self.cloudinary_id,
+            "user_id": self.user_id,
+            "username": User.query.get(self.user_id).username,
+            "ingredients": self.ingredients,
+            "preparation": self.preparation,
+            "level": self.level,
+            "time": self.time,
+            "portions": self.portions,
+        }
+
+class Saved(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+
+    user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
+    post_id = db.Column(db.Integer, db.ForeignKey("post.id"), nullable=False)
+
+    __table_args__ = (db.UniqueConstraint(
+        "user_id",
+        "post_id",
+        name = "message_error",
+    ),)
+
+    def serialize(self):
+        return {
+            "id": self.id,
         }
 
 # class Like(db.model):
@@ -82,19 +111,4 @@ class Post(db.model):
 
 
 
-# class Saved(db.model):
-#     id = db.Column(db.Integer, primary_key=True)
 
-#     user_id = db.column(db.Integer, db.ForeingKey("user.id"), nullable=False)
-#     post_id = db.column(db.Integer, db.ForeingKey("post.id"), nullable=False)
-
-#     __table_args__ = (db.UniqueConstraint(
-#         "user_id",
-#         "post_id",
-#         name = "message_error",
-#     ),)
-
-#     def serialize(self):
-#         return {
-#             "id": self.id,
-#         }
