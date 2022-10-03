@@ -6,7 +6,10 @@ const getState = ({ getStore, getActions, setStore }) => {
 			urlLogin: "/login",
 
 			users: [],
-			tokens: localStorage.getItem("token") || ""
+			tokens: localStorage.getItem("token") || "",
+
+			posts: [],
+			saveds: []
 		},
 		actions: {
 			// Use getActions to call a function within a fuction
@@ -99,7 +102,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 					if (response.ok) {
 						let data = await response.json()
 						setStore({
-							token: data.token
+							tokens: data.token
 						})
 						localStorage.setItem("token", data.token)
 						return true
@@ -119,7 +122,11 @@ const getState = ({ getStore, getActions, setStore }) => {
 			getPosts: async() => {
 				const store = getStore()
 				try {
-					const response = await fetch(`${store.urlBase}/feed`);
+					const response = await fetch(`${store.urlBase}/feed`, {
+						headers:{
+							Authorization: `Bearer ${store.tokens}`
+						}
+					});
 					const data = await response.json();
 					if (!response.ok) {
 						throw new Error("getPosts error")
@@ -155,6 +162,75 @@ const getState = ({ getStore, getActions, setStore }) => {
 				} catch (error) {
 					console.log("deletePosts Error", error);
 				  }
+			},
+			addSaveds: (item) => {
+				const store = getStore()
+				const exist = store.saveds.find((saved) => saved.created == item.created)
+				if(!exist){
+					setStore({
+						...store,
+						saveds: [...store.saveds, item] 
+					})
+				}else{
+					const updatedSaveds = store.saveds.filter((saved) => saved.created != item.created) 
+					setStore({
+						...store,
+						saveds: updatedsaveds
+					})
+				}
+			},
+			searchUsers: async() => {
+				const store = getStore()
+				try {
+					const response = await fetch(`${store.urlBase}/search/users`, {
+						method: 'POST', 
+						headers: {
+							"Content-Type": "application/json",
+						},
+						body: JSON.stringify(user), 
+					});
+					
+					if (response.ok) {
+						let data = await response.json()
+						setStore({
+						...store,
+						users: data
+						})
+						return true
+					} else {
+						throw new Error("searchUsers error")
+						return false
+					}
+					
+				} catch (error) {
+					console.log("searchUsers Error", error);
+				}
+			},
+			searchPosts: async(posts) => {
+				const store = getStore()
+				try {
+					const response = await fetch(`${store.urlBase}/search/posts`, {
+						method: 'POST', 
+						headers: {
+							"Content-Type": "application/json",
+						},
+						body: JSON.stringify(posts), 
+					});
+					
+					if (response.ok) {
+						let data = await response.json()
+						setStore({
+						...store,
+						posts: data
+						})
+						return true
+					} else {
+						throw new Error("searchPosts error")
+					}
+					
+				} catch (error) {
+					console.log("searchPosts Error", error);
+				}
 			}
 		}
 	};
