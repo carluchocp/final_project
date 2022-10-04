@@ -74,6 +74,27 @@ class Saved(db.Model):
             "id": self.id,
         }
 
+class Profile(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    location = db.Column(db.String(30), unique=False, nullable=False)
+    biography = db.Column(db.String(30), unique=False, nullable=False)
+    image_url = db.Column(db.String(150), unique=False, nullable=False)
+
+    user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
+    cloudinary_id = db.Column(db.String(120), unique=False, nullable=False)
+
+    def serialize(self):
+        return {
+            "id": self.id,
+            "location": self.location,
+            "biography": self.biography,
+            "user_id": self.user_id,
+            "username": User.query.get(self.user_id).username,
+            "name": User.query.get(self.user_id).name,
+            "image_url": self.image_url,
+            "cloudinary_id": self.cloudinary_id,
+        }
+
 # class Like(db.model):
 #     id = db.Column(db.Integer, primary_key=True)
     

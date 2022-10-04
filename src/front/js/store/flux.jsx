@@ -8,6 +8,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 			users: [],
 			tokens: localStorage.getItem("token") || "",
 
+			profiles: [],
 			posts: [],
 			saveds: []
 		},
@@ -139,6 +140,28 @@ const getState = ({ getStore, getActions, setStore }) => {
 					console.log("getPosts Error", error);
 				  }
 			},
+			getProfiles: async() => {
+				const store = getStore()
+				try {
+					const response = await fetch(`${store.urlBase}/main/profile`, {
+						headers:{
+							Authorization: `Bearer ${store.tokens}`,
+							"Content-Type": "application/json"
+						}
+					});
+					const data = await response.json();
+					console.log(data)
+					if (!response.ok) {
+						throw new Error("getProfiles error")
+					}
+					setStore({
+						...store,
+						profiles: data,
+					});
+				} catch (error) {
+					console.log("getProfiles Error", error);
+				  }
+			},
 			uploadImg: async(post) => {
 				const store = getStore()
 				try {
@@ -148,6 +171,19 @@ const getState = ({ getStore, getActions, setStore }) => {
 						body: "product",
 					});
 					getActions().getPosts();
+				} catch (error) {
+					console.log("getPosts Error", error);
+				  }
+			},
+			uploadProfileImg: async(profile) => {
+				const store = getStore()
+				try {
+					const response = await fetch(`${store.urlBase}/main/profile`, {
+						method: "POST",
+						mode: "no-cors",
+						body: "product",
+					});
+					getActions().getProfiles();
 				} catch (error) {
 					console.log("getPosts Error", error);
 				  }
@@ -179,7 +215,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 					})
 				}
 			},
-			searchUsers: async() => {
+			searchProfiles: async(profiles) => {
 				const store = getStore()
 				try {
 					const response = await fetch(`${store.urlBase}/search/users`, {
@@ -187,14 +223,14 @@ const getState = ({ getStore, getActions, setStore }) => {
 						headers: {
 							"Content-Type": "application/json",
 						},
-						body: JSON.stringify(user), 
+						body: JSON.stringify(profiles), 
 					});
 					
 					if (response.ok) {
 						let data = await response.json()
 						setStore({
 						...store,
-						users: data
+						profiles: data
 						})
 						return true
 					} else {
@@ -216,9 +252,10 @@ const getState = ({ getStore, getActions, setStore }) => {
 						},
 						body: JSON.stringify(posts), 
 					});
-					
+					console.log(response)
 					if (response.ok) {
 						let data = await response.json()
+						console.log(data)
 						setStore({
 						...store,
 						posts: data
