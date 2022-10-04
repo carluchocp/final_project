@@ -4,7 +4,7 @@ This module takes care of starting the API Server, Loading the DB and Adding the
 import base64
 import os
 from flask import Flask, request, jsonify, url_for, Blueprint
-from api.models import db, User, Post, Saved
+from api.models import db, User, Post, Saved, Profile
 from api.utils import generate_sitemap, APIException
 from werkzeug.security import generate_password_hash, check_password_hash
 from base64 import b64encode
@@ -119,16 +119,11 @@ def upload_image(user_id = None):
     time = request.form.get('time')
     portions = request.form.get('portions')
 
-
     if image_file.content_type not in VALID_FORMATS:
         return jsonify({"error": "File must be png, jpg, or jpeg"}), 400
 
     if image_file is None or name is None or caption is None or ingredients is None or preparation is None or level is None or time is None or portions is None:
-        return jsonify({"error": "All fields are required(Name, file)"}), 400
-
-    # if user_id is None:
-    #     return jsonify({"error":"User not found"}), 400
-
+        return jsonify({"error": "All fields are required"}), 400
 
     try: 
         user_id = get_jwt_identity()
@@ -152,7 +147,42 @@ def get_followed_users_posts():
         return jsonify({"error": "No posts"}), 400
     print(posts)
     return  jsonify(list(map(lambda post: post.serialize(), posts))), 200 
-    # return jsonify([]), 200
+
+@api.route('/main/profile', methods=['GET'])
+@jwt_required()
+def get_all_profiles():
+    profiles = Profile.query.get(get_jwt_identity())
+    if profiles is None:
+        return jsonify({"error": "No profiles"}), 400
+    return  jsonify(profiles.serialize()), 200 
+
+@api.route('/main/profile', methods=['POST'])
+@jwt_required()
+def upload_profiles(user_id = None):
+    method_allowed(request, "POST")
+
+    location = request.form.get('location')
+    biography = request.form.get('biography')
+    image_file = request.files['image']
+
+    if user_id is None:
+        return jsonify({"error": "the user id is required"}), 400
+
+    if location is None or biography is None:
+        return jsonify({"error": "All fields are required(Name, file)"}), 400
+
+    try:
+        user_id = get_jwt_identity()
+        print(user_id)
+        cloudinary_upload = uploader.upload(image_file)
+        new_profile = Profile(user_id=user_id, location=location, biography=biography, image_url=cloudinary_upload["url"], cloudinary_id=cloudinary_upload["public_id"],)
+        db.session.add(new_profile)
+        db.session.commit()
+        return jsonify({"message":"Profile succesfully upload"})
+    except Exception as error:
+        db.session.rollback()
+        return jsonify({"error":error.args}), 500
+    return jsonify([]), 200
 
 @api.route('/main', methods=['GET'])
 @jwt_required()
@@ -218,27 +248,24 @@ def saved_post(post_id = None):
     return jsonify([]), 200
 
 @api.route('/search/users', methods=['POST'])
-def serch_users():
+def search_users():
 
     search = request.json.get('search')
-    users = User.query.all()
-    print(users)
+    profiles = Profile.query.filter_by(username= )
+    print(profiles)
 
     results = []
 
-    for user in users:
-        if search in user.username:
-            results.append(user) 
+    # print(results)
 
-    print(results)
-
-    if users is None:
-        return jsonify({"error": "User not found"}), 404
+    if profiles is None:
+        return jsonify({"error": "Profile not found"}), 404
 
     if search is None:
         return jsonify({"error": "You must fill this field"}), 400
 
-    return jsonify(list(map(lambda item: item.serialize(), results))), 200
+    # return jsonify(list(map(lambda item: item.serialize(), results))), 200
+    return jsonify([]), 200
 
 @api.route('/search/posts', methods=['POST'])
 def serch_posts():

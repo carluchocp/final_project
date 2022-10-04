@@ -22,26 +22,26 @@ export const Post = ({post}) => {
               <p className="card-text">
                 {post.caption}
               </p>
-              <p className="card-level-recipe">
-                <medium className="text-muted">
+              <div className="card-level-recipe">
+                <div className="text-muted">
                   📊 {post.level} | 🕓 {post.time} | 🍽️ {post.portions}
-                </medium>
-              </p>
+                </div>
+              </div>
               <div className="container-buttons">
-                <p className="text-like-button">
+                <div className="text-like-button">
                   {" "}
                   Me gusta{" "}
                   <button className="like-button">
-                    <i class="fa-regular fa-heart"></i>
+                    <i className="fa-regular fa-heart"></i>
                   </button>
-                </p>
-                <p className="text-favorite-button">
+                </div>
+                <div className="text-favorite-button">
                   {" "}
                   Agregar a favoritos
                   <button className="favorite-button">
-                    <i class="fa-regular fa-star"></i>
+                    <i className="fa-regular fa-star"></i>
                   </button>
-                </p>
+                </div>
               </div>
             </div>
           </div>

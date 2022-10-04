@@ -41,7 +41,7 @@ export const SearchPosts = (props) => {
             <button className="btn btn-primary" type="submit">Search</button>
           </form>
         </div>
-        <div classname="my-4">
+        <div className="my-4">
           {store.posts.map((post) => (
             <Post key={post.id} post={post}/>
           ))}
