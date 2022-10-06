@@ -120,6 +120,29 @@ const getState = ({ getStore, getActions, setStore }) => {
 					token: ""
 				})
 			},
+			setPost: async(post) => {
+				let store = getStore()
+				console.log("me ejecuto")
+				console.log(post)
+				try {
+					let response = await fetch(`${store.urlBase}/newpost`, {
+						method: 'POST',
+						headers: {
+							Authorization: `Bearer ${store.tokens}`,
+						},
+						body: post,
+					})
+					if (response.ok) {
+						let data = await response.json()
+						getActions().getPosts()
+						return true
+					} else {
+						return false
+					}
+				} catch (error) {
+					console.log(`Error: ${error}`)
+				}
+			},
 			getPosts: async() => {
 				const store = getStore()
 				try {
@@ -140,13 +163,25 @@ const getState = ({ getStore, getActions, setStore }) => {
 					console.log("getPosts Error", error);
 				  }
 			},
+			uploadImg: async(post) => {
+				const store = getStore()
+				try {
+					const response = await fetch(`${store.urlBase}/feed`, {
+						method: "POST",
+						mode: "no-cors",
+						body: "product",
+					});
+					getActions().getPosts();
+				} catch (error) {
+					console.log("upload image Error", error);
+				  }
+			},
 			getProfiles: async() => {
 				const store = getStore()
 				try {
 					const response = await fetch(`${store.urlBase}/main/profile`, {
 						headers:{
-							Authorization: `Bearer ${store.tokens}`,
-							"Content-Type": "application/json"
+							Authorization: `Bearer ${store.tokens}`
 						}
 					});
 					const data = await response.json();
@@ -162,18 +197,28 @@ const getState = ({ getStore, getActions, setStore }) => {
 					console.log("getProfiles Error", error);
 				  }
 			},
-			uploadImg: async(post) => {
-				const store = getStore()
+			updateProfile: async(profile) => {
+				let store = getStore()
+				console.log("me ejecuto")
+				console.log(profile)
 				try {
-					const response = await fetch(`${store.urlBase}/feed`, {
-						method: "POST",
-						mode: "no-cors",
-						body: "product",
-					});
-					getActions().getPosts();
+					let response = await fetch(`${store.urlBase}/profile`, {
+						method: 'PUT',
+						headers: {
+							Authorization: `Bearer ${store.tokens}`,
+						},
+						body: profile,
+					})
+					if (response.ok) {
+						let data = await response.json()
+						getActions().getProfiles()
+						return true
+					} else {
+						return false
+					}
 				} catch (error) {
-					console.log("getPosts Error", error);
-				  }
+					console.log(`Error: ${error}`)
+				}
 			},
 			uploadProfileImg: async(profile) => {
 				const store = getStore()
@@ -191,7 +236,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 			deletePost: async() => {
 				const store = getStore()
 				try {
-					const response = await fetch(`${store.urlBase}/feed/${post_id}`, {
+					const response = await fetch(`${store.urlBase}/main`, {
 						method: "DELETE",
 					});
 					getActions().getPosts();
@@ -228,11 +273,8 @@ const getState = ({ getStore, getActions, setStore }) => {
 					
 					if (response.ok) {
 						let data = await response.json()
-						setStore({
-						...store,
-						profiles: data
-						})
-						return true
+						console.log(data)
+						return data
 					} else {
 						throw new Error("searchUsers error")
 						return false

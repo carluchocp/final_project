@@ -5,6 +5,18 @@ import logo from "../../img/foodies.png";
 import styles from "../../styles/postcomponent.css";
 
 export const Post = ({post}) => {
+  const { actions } = useContext(Context)
+
+  let handleDelete = (event) => {
+    event.preventDefault();
+    console.log("ejecuto el delete");
+    if (actions.deletePost(post)) {
+      console.log("eliminado exitoso")
+    } else {
+      console.log("no se pudo eliminar")
+    }
+  }
+
   return (
     <div className="container-post">
       <div className="card mb-3">
@@ -19,6 +31,9 @@ export const Post = ({post}) => {
           <div className="col-md-8">
             <div className="card-body">
               <h4 className="card-title">{post.username} | {post.name}</h4>
+              <button className="button-trash" onClick={handleDelete}>
+                  <i className="fa-solid fa-trash"></i>
+              </button>
               <p className="card-text">
                 {post.caption}
               </p>
@@ -47,7 +62,7 @@ export const Post = ({post}) => {
           </div>
           <div className="col-md-12">
             <div className="container-accordion">
-              <div className="accordion" id="accordionExample">
+              <div className="accordion" id={`collapse${post.id}`}>
                 <div className="accordion-item">
                   <h2 className="accordion-header" id="headingOne">
                     <button
@@ -65,7 +80,7 @@ export const Post = ({post}) => {
                     id="collapseOne"
                     className="accordion-collapse collapse show"
                     aria-labelledby="headingOne"
-                    data-bs-parent="#accordionExample"
+                    data-bs-parent={`collapse${post.id}`}
                   >
                     <div className="accordion-body">
                       {post.ingredients}

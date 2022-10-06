@@ -13,6 +13,8 @@ class User(db.Model):
     salt = db.Column(db.String(150), unique=False, nullable=False)
     is_active = db.Column(db.Boolean(), unique=False, nullable=False)
 
+    profile = db.relationship("Profile")
+
     def __repr__(self):
         return '<User %r>' % self.username
 
@@ -25,6 +27,15 @@ class User(db.Model):
             "email": self.email,
             "is_active": self.is_active,
         }
+
+    def get_profile(self):
+        profile = Profile.query.filter_by(user_id=self.id).one_or_none()
+        return profile.serialize()
+    
+    def create_profile(self):
+        profile = Profile(user_id=self.id)
+        db.session.add(profile)
+        db.session.commit()
 
 class Post(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -76,12 +87,12 @@ class Saved(db.Model):
 
 class Profile(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    location = db.Column(db.String(30), unique=False, nullable=False)
-    biography = db.Column(db.String(30), unique=False, nullable=False)
-    image_url = db.Column(db.String(150), unique=False, nullable=False)
+    location = db.Column(db.String(30), unique=False, nullable=True)
+    biography = db.Column(db.String(30), unique=False, nullable=True)
+    image_url = db.Column(db.String(150), unique=False, nullable=True)
 
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
-    cloudinary_id = db.Column(db.String(120), unique=False, nullable=False)
+    cloudinary_id = db.Column(db.String(120), unique=False, nullable=True)
 
     def serialize(self):
         return {
