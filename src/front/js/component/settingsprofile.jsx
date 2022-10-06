@@ -1,9 +1,49 @@
 import React, { useContext, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Context } from "../store/appContext.jsx";
 import logo from "../../img/foodies.png";
 
+let inicialState = {
+  location: "",
+  biography: "",
+  image: "",
+}
+
 export const SettingsProfile = () => {
+  const {store, actions} = useContext(Context)
+  let navigate = useNavigate()
+  const [profileData, setProfileData] = useState(inicialState)
+
+  let handleSubmit = async (event) => {
+    event.preventDefault();
+    const formData = new FormData()
+    formData.append("image", profileData.image)
+    formData.append("location", profileData.location)
+    formData.append("biography", profileData.biography)
+  
+
+    const result = actions.updateProfile(formData)
+    if (result) {
+      navigate("/main");
+    } else {
+      console.log("registrado fallido");
+    }
+  };
+
+  let handleChange = ({ target }) => {
+    setProfileData({
+      ...profileData,
+      [target.name]: target.value,
+    });
+  };
+
+  let handleImage = (event) => {
+    setProfileData({
+      ...profileData,
+      image: event.target.files[0]
+    })
+  }
+
   return (
     <div className="container-page">
       <div className="text-center">
@@ -12,24 +52,15 @@ export const SettingsProfile = () => {
         <br />
       </div>
       <div className="container">
-        <form>
-          <div className="form-group">
-            <label>Modifica tu nombre:</label>
-            <input
-              type={"text"}
-              className="form-control"
-              placeholder="Ejemplo: Diana A. Gómez"
-              name="description-profile"
-            />
-          </div>
-          <br />
+        <form onSubmit={handleSubmit}>
           <div className="form-group">
             <label>Cambia tu foto de perfil:</label>
             <input
               type={"file"}
               className="form-control"
               placeholder="Añade una imagen"
-              name="new-photo-profile"
+              name="image"
+              onChange={handleImage}
             />
           </div>
           <br />
@@ -39,7 +70,8 @@ export const SettingsProfile = () => {
               type={"text"}
               className="form-control"
               placeholder="Ejemplo: Soy arquitect@ y me encanta la cocina oriental..."
-              name="description-profile"
+              name="biography"
+              onChange={handleChange}
             />
           </div>
           <br />
@@ -49,7 +81,8 @@ export const SettingsProfile = () => {
               type={"text"}
               className="form-control"
               placeholder="Caracas, Venezuela"
-              name="location-profile"
+              name="location"
+              onChange={handleChange}
             />
           </div>
           <br />

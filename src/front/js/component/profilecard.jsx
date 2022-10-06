@@ -4,20 +4,22 @@ import { Context } from "../store/appContext.jsx";
 import logo from "../../img/foodies.png";
 import styles from "../../styles/profilecard.css";
 
-export const ProfileCard = () => {
+
+export const ProfileCard = (props) => {
   const {store, actions} = useContext(Context)
-  let {profiles} = store
-  console.log(profiles)
+  const [profiles, setProfiles] = useState(props.profile || store.profile)
+  console.log(props)
   useEffect(() => {
+    if (profiles) return
     actions.getProfiles()
-  }, [])
+  }, [profiles])
   return (
     <div className="container-card-profile">
       <div className="card mb-3">
         <div className="row g-0">
           <div className="col-md-4">
             <img
-              src={profiles?.image}
+              src={profiles?.image_url}
               className="img-fluid rounded-start"
               alt="..."
             />
@@ -28,7 +30,7 @@ export const ProfileCard = () => {
                 <h4 className="card-title">{profiles?.username}</h4>
                 <h6>{profiles?.name}</h6>
                 <button className="button-settings">
-                  <i className="fa-solid fa-gear"></i>
+                  <Link to="/settings"><i className="fa-solid fa-gear"></i></Link>
                 </button>
               </div>
               <p className="card-level-recipe">

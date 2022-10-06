@@ -70,6 +70,7 @@ def signup_user():
 
             try:
                 db.session.commit()
+                new_user.create_profile()
                 return jsonify(new_user.serialize()), 201
             except Exception as error:
                 db.session.rollback()
@@ -105,7 +106,7 @@ def login_user():
             
     return jsonify({"message":"bad credentials"})
 
-@api.route('/main', methods=['POST'])
+@api.route('/newpost', methods=['POST'])
 @jwt_required()
 def upload_image(user_id = None):
     method_allowed(request, "POST")
@@ -151,12 +152,12 @@ def get_followed_users_posts():
 @api.route('/main/profile', methods=['GET'])
 @jwt_required()
 def get_all_profiles():
-    profiles = Profile.query.get(get_jwt_identity())
+    profiles = Profile.query.filter_by(user_id=get_jwt_identity()).one_or_none()
     if profiles is None:
         return jsonify({"error": "No profiles"}), 400
     return  jsonify(profiles.serialize()), 200 
 
-@api.route('/main/profile', methods=['POST'])
+@api.route('/main/profile/<int:user_id>', methods=['POST'])
 @jwt_required()
 def upload_profiles(user_id = None):
     method_allowed(request, "POST")
@@ -251,21 +252,25 @@ def saved_post(post_id = None):
 def search_users():
 
     search = request.json.get('search')
-    profiles = Profile.query.filter_by(username= )
-    print(profiles)
+    users = User.query.all()
+    # print(profiles)
 
     results = []
 
+    for user in users:
+        if search in user.username:
+            results.append(user)
+
     # print(results)
 
-    if profiles is None:
+    if users is None:
         return jsonify({"error": "Profile not found"}), 404
 
     if search is None:
         return jsonify({"error": "You must fill this field"}), 400
 
     # return jsonify(list(map(lambda item: item.serialize(), results))), 200
-    return jsonify([]), 200
+    return jsonify(list(map(lambda item: item.get_profile(), results))), 200
 
 @api.route('/search/posts', methods=['POST'])
 def serch_posts():
@@ -286,3 +291,36 @@ def serch_posts():
         return jsonify({"error": "You must fill this field"}), 400
 
     return jsonify(list(map(lambda item: item.serialize(), results))), 200
+
+@api.route('/profile', methods=['PUT'])
+@jwt_required()
+def set_profile():
+
+    image_file = request.files['image']
+    location = request.form.get('location')
+    biography = request.form.get('biography')
+
+    profile = Profile.query.filter_by(user_id=get_jwt_identity()).one_or_none()
+
+    if profile is None:
+        return jsonify({"error":"perfil no existente"})
+
+    if image_file is not None:
+        cloudinary_upload = uploader.upload(image_file)
+        profile.image_url = cloudinary_upload["url"]
+        profile.cloudinary_id = cloudinary_upload["public_id"]
+    
+    if location is not None:
+        profile.location = location
+
+    if biography is not None:
+        profile.biography = biography
+
+    try:
+        db.session.commit()
+        return jsonify({}), 200
+    
+    except Exception as Error:
+        db.session.rollback()
+        return jsonify({"error":Error.args}), 500
+    

@@ -16,10 +16,8 @@ export const SearchPosts = (props) => {
     } else {
       console.log("negada la busqueda")
     }
-      // useEffect(() => {
-      //   actions.getPosts()
-      // }, [])
   }
+  
   let handleChange = (event) => {
     setPost({search: event.target.value})
   }

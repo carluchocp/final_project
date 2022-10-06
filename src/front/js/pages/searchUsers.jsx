@@ -2,15 +2,20 @@ import React, { useState, useEffect, useContext } from "react";
 import PropTypes from "prop-types";
 import { Link, useParams } from "react-router-dom";
 import { Context } from "../store/appContext.jsx";
+import { ProfileCard } from "../component/profilecard.jsx";
 
 export const SearchUsers = (props) => {
   const { store, actions } = useContext(Context);
   const [profile, setProfile] = useState({search: ''})
+  const [user, setUser] = useState([])
 
-  let handleSubmit = (event) => {
+  let handleSubmit = async(event) => {
     event.preventDefault();
     console.log("ejecuto el submit");
-    if (actions.searchProfiles(profile)) {
+    const result = await actions.searchProfiles(profile)
+    if (result) {
+      console.log(result)
+      setUser(result)
       console.log("busqueda exitosa")
     } else {
       console.log("negada la busqueda")
@@ -38,8 +43,8 @@ export const SearchUsers = (props) => {
           </form>
         </div>
         <div className="my-4">
-          {store.profiles.map((profile) => (
-            <Profile key={profile.id} post={profile}/>
+          {user?.map((profile) => (
+            <ProfileCard key={profile.id} profile={profile}/>
           ))}
         </div>
       </div>
