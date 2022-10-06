@@ -10,7 +10,7 @@ import styles from "../../styles/main.css";
 export const Main = () => {
   const {store, actions} = useContext(Context)
   useEffect(() => {
-    actions.getPosts()
+    actions.getMainPosts()
   }, [])
 
   return (
@@ -21,7 +21,7 @@ export const Main = () => {
       <h2 className="tittle-recipes">Mis recetas</h2>
       <div className="container-my-recipes">
         {store.posts.map((post) => (
-          <Post key={post.id} post={post}/>
+          <MyPost key={post.id} post={post}/>
         ))}
       </div>
     </div>

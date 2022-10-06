@@ -28,19 +28,21 @@ export const ProfileCard = (props) => {
             <div className="card-body">
               <div className="header-profile">
                 <h4 className="card-title">{profiles?.username}</h4>
-                <h6>{profiles?.name}</h6>
                 <button className="button-settings">
                   <Link to="/settings"><i className="fa-solid fa-gear"></i></Link>
                 </button>
               </div>
-              <p className="card-level-recipe">
+              <div>
+                <h6 className="card-title">{profiles?.name}</h6>
+              </div>
+              <div className="card-level-recipe">
                 <div className="text-muted">
                   👥 30 seguidores | 👥 60 seguidos | ⭐ 23 Favoritos
                 </div>
-              </p>
-              <p className="card-level-recipe">
+              </div>
+              <div className="card-level-recipe">
                 <div className="text-muted">{profiles?.location}</div>
-              </p>
+              </div>
               <p className="card-text">
                 {profiles?.biography}
               </p>

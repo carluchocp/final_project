@@ -8,7 +8,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 			users: [],
 			tokens: localStorage.getItem("token") || "",
 
-			profiles: [],
+			profiles: {},
 			posts: [],
 			saveds: []
 		},
@@ -161,7 +161,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 					});
 				} catch (error) {
 					console.log("getPosts Error", error);
-				  }
+				}
 			},
 			uploadImg: async(post) => {
 				const store = getStore()
@@ -309,6 +309,26 @@ const getState = ({ getStore, getActions, setStore }) => {
 					
 				} catch (error) {
 					console.log("searchPosts Error", error);
+				}
+			},
+			getMainPosts: async() => {
+				const store = getStore()
+				try {
+					const response = await fetch(`${store.urlBase}/main`, {
+						headers:{
+							Authorization: `Bearer ${store.tokens}`
+						}
+					});
+					const data = await response.json();
+					if (!response.ok) {
+						throw new Error("getPosts error")
+					}
+					setStore({
+						...store,
+						posts: data,
+					});
+				} catch (error) {
+					console.log("getPosts Error", error);
 				}
 			}
 		}
