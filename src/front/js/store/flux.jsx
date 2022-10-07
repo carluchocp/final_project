@@ -1,7 +1,7 @@
 const getState = ({ getStore, getActions, setStore }) => {
 	return {
 		store: {
-			urlBase: "http://127.0.0.1:3001/api",
+			urlBase: process.env.BACKEND_URL,
 			urlSignUp: "/signup",
 			urlLogin: "/login",
 
