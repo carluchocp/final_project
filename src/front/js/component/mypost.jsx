@@ -1,11 +1,25 @@
-import React, { useContext, useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useContext, useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { Context } from "../store/appContext.jsx";
 import logo from "../../img/foodies.png";
 import styles from "../../styles/postcomponent.css";
 
-export const Post = ({post}) => {
-  const { actions } = useContext(Context)
+export const MyPost = ({post}) => {
+
+  const { store, actions } = useContext(Context)
+  let navigate = useNavigate();
+
+  let handleDelete = (event) => {
+    event.preventDefault();
+    console.log("ejecuto el delete");
+    const result = actions.deletePost(post.id)
+    if (result) {
+      navigate("/main");
+      console.log("eliminado exitoso")
+    } else {
+      console.log("no se pudo eliminar")
+    }
+  }
 
   return (
     <div className="container-post">
@@ -20,7 +34,12 @@ export const Post = ({post}) => {
           </div>
           <div className="col-md-8">
             <div className="card-body">
-              <h4 className="card-title">{post.username} | {post.name}</h4>
+              <div className="header-post">
+                <h4 className="card-title">{post.username} | {post.name}</h4>
+                <button className="button-trash" onClick={handleDelete}>
+                  <i className="fa-solid fa-trash"></i>
+                </button>
+              </div>
               <p className="card-text">
                 {post.caption}
               </p>
@@ -30,26 +49,26 @@ export const Post = ({post}) => {
                 </div>
               </div>
               <div className="container-buttons">
-                <div className="text-like-button">
+                <p className="text-like-button">
                   {" "}
                   Me gusta{" "}
                   <button className="like-button">
                     <i className="fa-regular fa-heart"></i>
                   </button>
-                </div>
-                <div className="text-favorite-button">
+                </p>
+                <p className="text-favorite-button">
                   {" "}
                   Agregar a favoritos
                   <button className="favorite-button">
                     <i className="fa-regular fa-star"></i>
                   </button>
-                </div>
+                </p>
               </div>
             </div>
           </div>
           <div className="col-md-12">
             <div className="container-accordion">
-              <div className="accordion" id={`collapse${post.id}`}>
+              <div className="accordion" id="accordionExample">
                 <div className="accordion-item">
                   <h2 className="accordion-header" id="headingOne">
                     <button
@@ -67,7 +86,7 @@ export const Post = ({post}) => {
                     id="collapseOne"
                     className="accordion-collapse collapse show"
                     aria-labelledby="headingOne"
-                    data-bs-parent={`collapse${post.id}`}
+                    data-bs-parent="#accordionExample"
                   >
                     <div className="accordion-body">
                       {post.ingredients}

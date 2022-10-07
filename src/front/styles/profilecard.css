@@ -1,0 +1,17 @@
+.header-profile {
+  display: flex;
+}
+
+.button-settings {
+  border: 0px;
+  margin-left: 460px;
+  background: white;
+}
+
+.container-card-profile {
+  width: 980px;
+  margin-top: 20px;
+  margin-bottom: 25px;
+  margin-left: 20px;
+  margin-right: 20px;
+}

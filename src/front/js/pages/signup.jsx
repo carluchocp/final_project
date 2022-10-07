@@ -26,13 +26,6 @@ export const SignUp = () => {
     } else {
       console.log("registrado fallido");
     }
-    // console.log("me ejecuto el submit")
-    // if (actions.signUpCredentials(userData)) {
-    //   await actions.userSignUp(userData)
-    //   return navigate("/feed")
-    // } else {
-    //   alert("Invalid credentials")
-    // }
   };
 
   let handleChange = ({ target }) => {
@@ -45,7 +38,6 @@ export const SignUp = () => {
   return (
     <div className="text-center">
       <div className="container">
-        <br />
         <br />
         <br />
         <br />

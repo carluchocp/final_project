@@ -1,0 +1,27 @@
+img {
+  border-radius: 150px;
+}
+
+.recipes-feed {
+  margin-left: 175px;
+  margin-right: 425px;
+}
+
+.container-main {
+  margin-left: 175px;
+  margin-right: 425px;
+  margin-bottom: 200px;
+}
+
+.container-my-recipes {
+  margin-top: 5px;
+}
+
+.container-profile {
+  margin-bottom: 0px;
+}
+
+.tittle-recipes {
+  margin-left: 20px;
+  margin-top: 20px;
+}

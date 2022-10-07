@@ -7,7 +7,7 @@
   height: 326px;
   width: 980px;
   margin-top: 20px;
-  margin-bottom: 20px;
+  margin-bottom: 200px;
   margin-left: 20px;
   margin-right: 20px;
 }
@@ -53,4 +53,14 @@
 .text-like-button,
 .text-favorite-button {
   margin-left: 15px;
+}
+
+.header-post {
+  display: flex;
+}
+
+.button-trash {
+  margin-left: 268px;
+  border: 0px;
+  background: white;
 }
