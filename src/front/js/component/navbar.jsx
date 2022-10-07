@@ -1,12 +1,15 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Link } from "react-router-dom";
 import logo from "../../img/foodies.png";
 import styles from "../../styles/navbar.css";
+import { Context } from "../store/appContext.jsx";
 
 export const Navbar = () => {
+  const { store, actions } = useContext(Context);
+
   return (
     <nav className="navbar navbar-expand-lg navbar-light bg-light">
-      <Link to="/">
+      <Link to="/feed">
         <img className="logo-foodies py-0 my-0 cover" src={logo} />
       </Link>
       <button
@@ -52,9 +55,9 @@ export const Navbar = () => {
               <i className="fa-regular fa-user"></i> Mi espacio
             </a>
             <div className="dropdown-menu" aria-labelledby="navbarDropdown">
-              <a className="dropdown-item" href="/logout">
-                Cerrar sesión
-              </a>
+              <Link to="/">
+				        <button className="btn btn-primary" onClick={actions.userLogOut}>Logout</button>
+			        </Link>
             </div>
           </li>
           <div className="ml-auto">

@@ -7,12 +7,8 @@ import styles from "../../styles/profilecard.css";
 
 export const ProfileCard = (props) => {
   const {store, actions} = useContext(Context)
-  const [profiles, setProfiles] = useState(props.profile || store.profile)
+  const [profiles, setProfiles] = useState(props.profile)
   console.log(props)
-  useEffect(() => {
-    if (profiles) return
-    actions.getProfiles()
-  }, [profiles])
   return (
     <div className="container-card-profile">
       <div className="card mb-3">
@@ -28,12 +24,13 @@ export const ProfileCard = (props) => {
             <div className="card-body">
               <div className="header-profile">
                 <h4 className="card-title">{profiles?.username}</h4>
+                
                 <button className="button-settings">
                   <Link to="/settings"><i className="fa-solid fa-gear"></i></Link>
                 </button>
               </div>
               <div>
-                <h6 className="card-title">{profiles?.name}</h6>
+                <h6>{profiles?.name}</h6>
               </div>
               <div className="card-level-recipe">
                 <div className="text-muted">

@@ -1,5 +1,5 @@
 import React, { useContext, useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Context } from "../store/appContext.jsx";
 import logo from "../../img/foodies.png";
 import styles from "../../styles/postcomponent.css";
@@ -7,12 +7,14 @@ import styles from "../../styles/postcomponent.css";
 export const MyPost = ({post}) => {
 
   const { store, actions } = useContext(Context)
+  let navigate = useNavigate();
 
   let handleDelete = (event) => {
     event.preventDefault();
     console.log("ejecuto el delete");
-    const result = actions.deletePost(post)
+    const result = actions.deletePost(post.id)
     if (result) {
+      navigate("/main");
       console.log("eliminado exitoso")
     } else {
       console.log("no se pudo eliminar")

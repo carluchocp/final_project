@@ -8,7 +8,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 			users: [],
 			tokens: localStorage.getItem("token") || "",
 
-			profiles: {},
+			profiles: null,
 			posts: [],
 			saveds: []
 		},
@@ -233,13 +233,17 @@ const getState = ({ getStore, getActions, setStore }) => {
 					console.log("getPosts Error", error);
 				  }
 			},
-			deletePost: async() => {
+			deletePost: async(id) => {
 				const store = getStore()
 				try {
-					const response = await fetch(`${store.urlBase}/main`, {
+					const response = await fetch(`${store.urlBase}/main/${id}`, {
+						headers: {
+							Authorization: `Bearer ${store.tokens}`,
+						},
 						method: "DELETE",
 					});
-					getActions().getPosts();
+					console.log(response)
+					getActions().getMainPosts();
 				} catch (error) {
 					console.log("deletePosts Error", error);
 				  }

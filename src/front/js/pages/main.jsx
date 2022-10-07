@@ -11,12 +11,16 @@ export const Main = () => {
   const {store, actions} = useContext(Context)
   useEffect(() => {
     actions.getMainPosts()
+    actions.getProfiles()
   }, [])
+  console.log(store.profiles)
 
   return (
     <div className="container-main">
       <div className="container-profile">
-        <ProfileCard />
+        {
+          store.profiles && <ProfileCard profile={store.profiles} />
+        }
       </div>
       <h2 className="tittle-recipes">Mis recetas</h2>
       <div className="container-my-recipes">
