@@ -4,3 +4,8 @@ a {
   padding-top: 5px;
   padding-bottom: 5px;
 }
+
+.logout-button {
+  border: 0px;
+  background: none;
+}

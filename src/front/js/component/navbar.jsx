@@ -38,26 +38,18 @@ export const Navbar = () => {
             </a>
           </li>
           <li className="nav-item">
-            <a className="nav-link" href="#">
+            <a className="nav-link" href="/favorites">
               <i className="fa-regular fa-star"></i> Favoritos
             </a>
           </li>
-          <li className="nav-item dropdown">
-            <a
-              className="nav-link dropdown-toggle"
-              href="/main"
-              id="navbarDropdown"
-              role="button"
-              data-toggle="dropdown"
-              aria-haspopup="true"
-              aria-expanded="false"
-            >
+          <li className="nav-item">
+            <a className="nav-link" href="/main">
               <i className="fa-regular fa-user"></i> Mi espacio
             </a>
             <div className="dropdown-menu" aria-labelledby="navbarDropdown">
-              <Link to="/">
-				        <button className="btn btn-primary" onClick={actions.userLogOut}>Logout</button>
-			        </Link>
+              <a className="dropdown-item" href="/logout">
+                Cerrar sesión
+              </a>
             </div>
           </li>
           <div className="ml-auto">
@@ -69,6 +61,13 @@ export const Navbar = () => {
         <div className="ml-auto">
           <Link to="/signup">
             <button className="btn btn-primary">Registrate</button>
+          </Link>
+        </div>
+        <div className="ml-auto">
+          <Link to="/logout">
+            <button className="logout-button">
+              <i class="fa-solid fa-right-from-bracket"></i>
+            </button>
           </Link>
         </div>
       </div>
