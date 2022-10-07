@@ -42,9 +42,9 @@ class Post(db.Model):
     name = db.Column(db.String(150), unique=False, nullable=False)
     image_url = db.Column(db.String(150), unique=False, nullable=False)
     # video = db.Column(db.String(150), unique=False, nullable=False)
-    caption = db.Column(db.String(300), unique=False, nullable=False)
-    ingredients = db.Column(db.String(300), unique=False, nullable=False)
-    preparation = db.Column(db.String(300), unique=False, nullable=False)
+    caption = db.Column(db.String(800), unique=False, nullable=False)
+    ingredients = db.Column(db.String(800), unique=False, nullable=False)
+    preparation = db.Column(db.String(800), unique=False, nullable=False)
     level = db.Column(db.String(30), unique=False, nullable=False)
     time = db.Column(db.String(30), unique=False, nullable=False)
     portions = db.Column(db.String(30), unique=False, nullable=False)
@@ -87,12 +87,12 @@ class Saved(db.Model):
 
 class Profile(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    location = db.Column(db.String(30), unique=False, nullable=True)
-    biography = db.Column(db.String(30), unique=False, nullable=True)
+    location = db.Column(db.String(100), unique=False, nullable=True)
+    biography = db.Column(db.String(100), unique=False, nullable=True)
     image_url = db.Column(db.String(150), unique=False, nullable=True)
 
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
-    cloudinary_id = db.Column(db.String(120), unique=False, nullable=True)
+    cloudinary_id = db.Column(db.String(220), unique=False, nullable=True)
 
     def serialize(self):
         return {
